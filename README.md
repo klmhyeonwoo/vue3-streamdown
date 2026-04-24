@@ -1,13 +1,13 @@
 <div align="center">
 
-<h1>vue-streamdown</h1>
+<h1>vue3-streamdown</h1>
 
 <p>A Vue 3 port of <a href="https://github.com/vercel/streamdown">streamdown</a> — a drop-in alternative to <code>vue-markdown</code>, built for AI-powered streaming.</p>
 
-[![npm version](https://img.shields.io/npm/v/vue-streamdown?color=blue)](https://www.npmjs.com/package/vue-streamdown)
-[![npm downloads](https://img.shields.io/npm/dm/vue-streamdown)](https://www.npmjs.com/package/vue-streamdown)
+[![npm version](https://img.shields.io/npm/v/vue3-streamdown?color=blue)](https://www.npmjs.com/package/vue3-streamdown)
+[![npm downloads](https://img.shields.io/npm/dm/vue3-streamdown)](https://www.npmjs.com/package/vue3-streamdown)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883)](https://vuejs.org/)
-[![License](https://img.shields.io/npm/l/vue-streamdown)](./LICENSE)
+[![License](https://img.shields.io/npm/l/vue3-streamdown)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178c6)](https://www.typescriptlang.org/)
 
 </div>
@@ -16,7 +16,7 @@
 
 ## Overview
 
-Streaming Markdown from LLMs creates unique rendering challenges: incomplete code fences, partial tables, and unterminated blocks can all break a naive renderer. `vue-streamdown` handles all of this gracefully — the same battle-tested approach as Vercel's `streamdown`, now for the Vue ecosystem.
+Streaming Markdown from LLMs creates unique rendering challenges: incomplete code fences, partial tables, and unterminated blocks can all break a naive renderer. `vue3-streamdown` handles all of this gracefully — the same battle-tested approach as Vercel's `streamdown`, now for the Vue ecosystem.
 
 **Works with any AI streaming API**: Vercel AI SDK, OpenAI, Anthropic, or raw SSE streams.
 
@@ -88,20 +88,20 @@ Streaming Markdown from LLMs creates unique rendering challenges: incomplete cod
 ## Installation
 
 ```bash
-npm install vue-streamdown
+npm install vue3-streamdown
 # or
-pnpm add vue-streamdown
+pnpm add vue3-streamdown
 # or
-yarn add vue-streamdown
+yarn add vue3-streamdown
 ```
 
 ### Tailwind CSS setup
 
-`vue-streamdown` uses Tailwind CSS utility classes. Add the following `@source` directive to your global CSS so Tailwind can detect them:
+`vue3-streamdown` uses Tailwind CSS utility classes. Add the following `@source` directive to your global CSS so Tailwind can detect them:
 
 ```css
 /* globals.css */
-@source "../node_modules/vue-streamdown/dist/*.js";
+@source "../node_modules/vue3-streamdown/dist/*.js";
 ```
 
 Adjust the relative path based on where your CSS file lives relative to `node_modules`.
@@ -144,7 +144,7 @@ Components use shadcn/ui CSS variables. If you already use shadcn/ui these are s
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 </script>
 
 <template>
@@ -161,7 +161,7 @@ import { Streamdown } from 'vue-streamdown'
 ```vue
 <script setup lang="ts">
 import { useChat } from '@ai-sdk/vue'
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 
 const { messages, status } = useChat()
 </script>
@@ -188,7 +188,7 @@ const { messages, status } = useChat()
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 
 const content = ref('')
 const isStreaming = ref(false)
@@ -240,7 +240,7 @@ npm install @streamdown/code
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 import { createCodePlugin } from '@streamdown/code'
 
 const codePlugin = createCodePlugin()
@@ -266,7 +266,7 @@ npm install @streamdown/mermaid
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 import { createMermaidPlugin } from '@streamdown/mermaid'
 
 const mermaidPlugin = createMermaidPlugin()
@@ -292,7 +292,7 @@ npm install @streamdown/math katex
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 import { createMathPlugin } from '@streamdown/math'
 import 'katex/dist/katex.min.css'
 
@@ -313,7 +313,7 @@ const mathPlugin = createMathPlugin()
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue-streamdown'
+import { Streamdown } from 'vue3-streamdown'
 import { createCodePlugin } from '@streamdown/code'
 import { createMermaidPlugin } from '@streamdown/mermaid'
 import { createMathPlugin } from '@streamdown/math'
@@ -419,14 +419,14 @@ import {
   useIsBlockCode,        // whether <code> is inside a <pre>
   useCodeBlock,          // { code: ComputedRef<string> } for copy/download
   useAnimate,            // animate plugin instance
-} from 'vue-streamdown'
+} from 'vue3-streamdown'
 ```
 
 ---
 
 ## Comparison with streamdown (React)
 
-| Feature | `streamdown` (React) | `vue-streamdown` (Vue 3) |
+| Feature | `streamdown` (React) | `vue3-streamdown` (Vue 3) |
 |---------|----------------------|--------------------------|
 | Streaming-safe parsing | ✅ | ✅ |
 | Syntax highlighting (Shiki) | ✅ | ✅ |
