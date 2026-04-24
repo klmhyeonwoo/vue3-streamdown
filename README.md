@@ -144,7 +144,7 @@ Components use shadcn/ui CSS variables. If you already use shadcn/ui these are s
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue3-streamdown'
+import { Streamdown } from "vue3-streamdown";
 </script>
 
 <template>
@@ -160,10 +160,10 @@ import { Streamdown } from 'vue3-streamdown'
 
 ```vue
 <script setup lang="ts">
-import { useChat } from '@ai-sdk/vue'
-import { Streamdown } from 'vue3-streamdown'
+import { useChat } from "@ai-sdk/vue";
+import { Streamdown } from "vue3-streamdown";
 
-const { messages, status } = useChat()
+const { messages, status } = useChat();
 </script>
 
 <template>
@@ -187,31 +187,31 @@ const { messages, status } = useChat()
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Streamdown } from 'vue3-streamdown'
+import { ref } from "vue";
+import { Streamdown } from "vue3-streamdown";
 
-const content = ref('')
-const isStreaming = ref(false)
+const content = ref("");
+const isStreaming = ref(false);
 
 async function chat(prompt: string) {
-  isStreaming.value = true
-  content.value = ''
+  isStreaming.value = true;
+  content.value = "";
 
-  const response = await fetch('/api/chat', {
-    method: 'POST',
+  const response = await fetch("/api/chat", {
+    method: "POST",
     body: JSON.stringify({ prompt }),
-  })
+  });
 
-  const reader = response.body!.getReader()
-  const decoder = new TextDecoder()
+  const reader = response.body!.getReader();
+  const decoder = new TextDecoder();
 
   while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    content.value += decoder.decode(value)
+    const { done, value } = await reader.read();
+    if (done) break;
+    content.value += decoder.decode(value);
   }
 
-  isStreaming.value = false
+  isStreaming.value = false;
 }
 </script>
 
@@ -240,17 +240,14 @@ npm install @streamdown/code
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue3-streamdown'
-import { createCodePlugin } from '@streamdown/code'
+import { Streamdown } from "vue3-streamdown";
+import { createCodePlugin } from "@streamdown/code";
 
-const codePlugin = createCodePlugin()
+const codePlugin = createCodePlugin();
 </script>
 
 <template>
-  <Streamdown
-    :model-value="markdown"
-    :plugins="{ code: codePlugin }"
-  />
+  <Streamdown :model-value="markdown" :plugins="{ code: codePlugin }" />
 </template>
 ```
 
@@ -266,17 +263,14 @@ npm install @streamdown/mermaid
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue3-streamdown'
-import { createMermaidPlugin } from '@streamdown/mermaid'
+import { Streamdown } from "vue3-streamdown";
+import { createMermaidPlugin } from "@streamdown/mermaid";
 
-const mermaidPlugin = createMermaidPlugin()
+const mermaidPlugin = createMermaidPlugin();
 </script>
 
 <template>
-  <Streamdown
-    :model-value="markdown"
-    :plugins="{ mermaid: mermaidPlugin }"
-  />
+  <Streamdown :model-value="markdown" :plugins="{ mermaid: mermaidPlugin }" />
 </template>
 ```
 
@@ -292,18 +286,15 @@ npm install @streamdown/math katex
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue3-streamdown'
-import { createMathPlugin } from '@streamdown/math'
-import 'katex/dist/katex.min.css'
+import { Streamdown } from "vue3-streamdown";
+import { createMathPlugin } from "@streamdown/math";
+import "katex/dist/katex.min.css";
 
-const mathPlugin = createMathPlugin()
+const mathPlugin = createMathPlugin();
 </script>
 
 <template>
-  <Streamdown
-    :model-value="markdown"
-    :plugins="{ math: mathPlugin }"
-  />
+  <Streamdown :model-value="markdown" :plugins="{ math: mathPlugin }" />
 </template>
 ```
 
@@ -313,17 +304,17 @@ const mathPlugin = createMathPlugin()
 
 ```vue
 <script setup lang="ts">
-import { Streamdown } from 'vue3-streamdown'
-import { createCodePlugin } from '@streamdown/code'
-import { createMermaidPlugin } from '@streamdown/mermaid'
-import { createMathPlugin } from '@streamdown/math'
-import 'katex/dist/katex.min.css'
+import { Streamdown } from "vue3-streamdown";
+import { createCodePlugin } from "@streamdown/code";
+import { createMermaidPlugin } from "@streamdown/mermaid";
+import { createMathPlugin } from "@streamdown/math";
+import "katex/dist/katex.min.css";
 
 const plugins = {
   code: createCodePlugin(),
   mermaid: createMermaidPlugin(),
   math: createMathPlugin(),
-}
+};
 </script>
 
 <template>
@@ -372,33 +363,33 @@ const plugins = {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `model-value` | `string` | `""` | Markdown content to render |
-| `mode` | `"streaming" \| "static"` | `"streaming"` | Rendering mode |
-| `is-animating` | `boolean` | `false` | Whether the stream is active |
-| `animated` | `boolean \| AnimateOptions` | — | Enable token-by-token animation |
-| `caret` | `"block" \| "circle"` | — | Blinking cursor style during streaming |
-| `controls` | `boolean \| ControlsConfig` | `true` | Show code/table/mermaid action buttons |
-| `line-numbers` | `boolean` | `true` | Show line numbers in code blocks |
-| `shiki-theme` | `[ThemeInput, ThemeInput]` | `["github-light", "github-dark"]` | Shiki light/dark themes |
-| `plugins` | `PluginConfig` | — | code / mermaid / math / cjk plugins |
-| `remark-plugins` | `Pluggable[]` | — | Custom remark plugins |
-| `rehype-plugins` | `Pluggable[]` | — | Custom rehype plugins |
-| `components` | `Components` | — | Override hast → Vue component map |
-| `translations` | `Partial<StreamdownTranslations>` | — | Override UI strings |
-| `icons` | `Partial<IconMap>` | — | Override toolbar icons |
-| `prefix` | `string` | — | Tailwind CSS class prefix |
-| `link-safety` | `LinkSafetyConfig` | `{ enabled: true }` | External link confirmation |
-| `mermaid` | `MermaidOptions` | — | Mermaid global config |
-| `dir` | `"auto" \| "ltr" \| "rtl"` | — | Text direction (auto = per-block detection) |
-| `parse-incomplete-markdown` | `boolean` | `true` | Use remend for streaming-safe parsing |
-| `normalize-html-indentation` | `boolean` | `false` | Prevent indented HTML being treated as code |
-| `allowed-tags` | `Record<string, string[]>` | — | Custom HTML tags to allow through sanitization |
-| `literal-tag-content` | `string[]` | — | Tags whose children are treated as plain text |
-| `remend` | `RemendOptions` | — | Options passed to remend |
-| `on-animation-start` | `() => void` | — | Called when streaming starts |
-| `on-animation-end` | `() => void` | — | Called when streaming ends |
+| Prop                         | Type                              | Default                           | Description                                    |
+| ---------------------------- | --------------------------------- | --------------------------------- | ---------------------------------------------- |
+| `model-value`                | `string`                          | `""`                              | Markdown content to render                     |
+| `mode`                       | `"streaming" \| "static"`         | `"streaming"`                     | Rendering mode                                 |
+| `is-animating`               | `boolean`                         | `false`                           | Whether the stream is active                   |
+| `animated`                   | `boolean \| AnimateOptions`       | —                                 | Enable token-by-token animation                |
+| `caret`                      | `"block" \| "circle"`             | —                                 | Blinking cursor style during streaming         |
+| `controls`                   | `boolean \| ControlsConfig`       | `true`                            | Show code/table/mermaid action buttons         |
+| `line-numbers`               | `boolean`                         | `true`                            | Show line numbers in code blocks               |
+| `shiki-theme`                | `[ThemeInput, ThemeInput]`        | `["github-light", "github-dark"]` | Shiki light/dark themes                        |
+| `plugins`                    | `PluginConfig`                    | —                                 | code / mermaid / math / cjk plugins            |
+| `remark-plugins`             | `Pluggable[]`                     | —                                 | Custom remark plugins                          |
+| `rehype-plugins`             | `Pluggable[]`                     | —                                 | Custom rehype plugins                          |
+| `components`                 | `Components`                      | —                                 | Override hast → Vue component map              |
+| `translations`               | `Partial<StreamdownTranslations>` | —                                 | Override UI strings                            |
+| `icons`                      | `Partial<IconMap>`                | —                                 | Override toolbar icons                         |
+| `prefix`                     | `string`                          | —                                 | Tailwind CSS class prefix                      |
+| `link-safety`                | `LinkSafetyConfig`                | `{ enabled: true }`               | External link confirmation                     |
+| `mermaid`                    | `MermaidOptions`                  | —                                 | Mermaid global config                          |
+| `dir`                        | `"auto" \| "ltr" \| "rtl"`        | —                                 | Text direction (auto = per-block detection)    |
+| `parse-incomplete-markdown`  | `boolean`                         | `true`                            | Use remend for streaming-safe parsing          |
+| `normalize-html-indentation` | `boolean`                         | `false`                           | Prevent indented HTML being treated as code    |
+| `allowed-tags`               | `Record<string, string[]>`        | —                                 | Custom HTML tags to allow through sanitization |
+| `literal-tag-content`        | `string[]`                        | —                                 | Tags whose children are treated as plain text  |
+| `remend`                     | `RemendOptions`                   | —                                 | Options passed to remend                       |
+| `on-animation-start`         | `() => void`                      | —                                 | Called when streaming starts                   |
+| `on-animation-end`           | `() => void`                      | —                                 | Called when streaming ends                     |
 
 ---
 
@@ -408,38 +399,38 @@ If you build custom components that need to access the streamdown context:
 
 ```ts
 import {
-  useStreamdownContext,  // shikiTheme, controls, isAnimating, etc.
-  useTranslations,       // UI strings
-  useIcons,              // toolbar icons
-  useCn,                 // prefix-aware cn()
-  usePlugins,            // full plugin config
-  useCodePlugin,         // code plugin
-  useMermaidPlugin,      // mermaid plugin
-  useIsBlockIncomplete,  // whether current block is mid-stream
-  useIsBlockCode,        // whether <code> is inside a <pre>
-  useCodeBlock,          // { code: ComputedRef<string> } for copy/download
-  useAnimate,            // animate plugin instance
-} from 'vue3-streamdown'
+  useStreamdownContext, // shikiTheme, controls, isAnimating, etc.
+  useTranslations, // UI strings
+  useIcons, // toolbar icons
+  useCn, // prefix-aware cn()
+  usePlugins, // full plugin config
+  useCodePlugin, // code plugin
+  useMermaidPlugin, // mermaid plugin
+  useIsBlockIncomplete, // whether current block is mid-stream
+  useIsBlockCode, // whether <code> is inside a <pre>
+  useCodeBlock, // { code: ComputedRef<string> } for copy/download
+  useAnimate, // animate plugin instance
+} from "vue3-streamdown";
 ```
 
 ---
 
 ## Comparison with streamdown (React)
 
-| Feature | `streamdown` (React) | `vue3-streamdown` (Vue 3) |
-|---------|----------------------|--------------------------|
-| Streaming-safe parsing | ✅ | ✅ |
-| Syntax highlighting (Shiki) | ✅ | ✅ |
-| Mermaid diagrams | ✅ | ✅ |
-| Math (KaTeX) | ✅ | ✅ |
-| CJK support | ✅ | ✅ |
-| Animated cursor | ✅ | ✅ |
-| Link safety modal | ✅ | ✅ |
-| Dark mode | ✅ | ✅ |
-| Tailwind prefix | ✅ | ✅ |
-| TypeScript | ✅ | ✅ |
-| Composition API / hooks | React hooks | Vue composables |
-| SSR | ✅ (Next.js) | ✅ (Nuxt) |
+| Feature                     | `streamdown` (React) | `vue3-streamdown` (Vue 3) |
+| --------------------------- | -------------------- | ------------------------- |
+| Streaming-safe parsing      | ✅                   | ✅                        |
+| Syntax highlighting (Shiki) | ✅                   | ✅                        |
+| Mermaid diagrams            | ✅                   | ✅                        |
+| Math (KaTeX)                | ✅                   | ✅                        |
+| CJK support                 | ✅                   | ✅                        |
+| Animated cursor             | ✅                   | ✅                        |
+| Link safety modal           | ✅                   | ✅                        |
+| Dark mode                   | ✅                   | ✅                        |
+| Tailwind prefix             | ✅                   | ✅                        |
+| TypeScript                  | ✅                   | ✅                        |
+| Composition API / hooks     | React hooks          | Vue composables           |
+| SSR                         | ✅ (Next.js)         | ✅ (Nuxt)                 |
 
 ---
 

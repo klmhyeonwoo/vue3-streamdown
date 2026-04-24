@@ -1,6 +1,6 @@
 {
   "name": "vue3-streamdown",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -44,13 +44,13 @@
   "author": "김현우",
   "license": "Apache-2.0",
   "description": "Vue 3 port of streamdown — a drop-in replacement for vue-markdown, designed for AI-powered streaming.",
-  "homepage": "https://github.com/HyunwooKim2/vue-streamdown#readme",
+  "homepage": "https://github.com/klmhyeonwoo/vue3-streamdown#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HyunwooKim2/vue-streamdown.git"
+    "url": "git+https://github.com/klmhyeonwoo/vue3-streamdown.git"
   },
   "bugs": {
-    "url": "https://github.com/HyunwooKim2/vue-streamdown/issues"
+    "url": "https://github.com/klmhyeonwoo/vue3-streamdown/issues"
   },
   "peerDependencies": {
     "vue": "^3.3.0"
