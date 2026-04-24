@@ -1,0 +1,25 @@
+# package.json의 "files" 필드가 dist/, README.md, LICENSE만 배포하도록 설정되어 있음
+# 이 파일은 만약을 위한 명시적 제외 목록
+
+node_modules/
+.turbo/
+
+# Source files (배포 불필요)
+src/
+composables/
+hooks/
+lib/
+*.vue
+index.ts
+Block.vue
+Streamdown.vue
+
+# Dev config
+tsup.config.ts
+vite.config.ts
+tsconfig.json
+
+# Misc
+.DS_Store
+*.log
+pnpm-lock.yaml
