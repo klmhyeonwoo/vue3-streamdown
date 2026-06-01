@@ -21,13 +21,14 @@
     >
       {{ t.imageNotAvailable }}
     </span>
-    <div :class="cn('pointer-events-none absolute inset-0 hidden rounded-lg bg-black/10 group-hover:block')" />
+    <div :class="cn('pointer-events-none absolute inset-0 hidden rounded-lg bg-black/10 group-hover:block')" data-streamdown="image-hover-overlay" />
     <button
       v-if="showDownload"
       :class="cn(
         'absolute right-2 bottom-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-border bg-background/90 shadow-sm backdrop-blur-sm transition-all duration-200 hover:bg-background',
         'opacity-0 group-hover:opacity-100'
       )"
+      data-streamdown="image-download-button"
       :title="t.downloadImage"
       type="button"
       @click="downloadImage"

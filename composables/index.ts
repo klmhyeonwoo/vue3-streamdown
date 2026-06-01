@@ -1,4 +1,4 @@
-import { computed, inject, provide, type ComputedRef, type Ref } from "vue";
+import { computed, inject, provide, h, type ComputedRef, type Ref } from "vue";
 import type { Component } from "vue";
 import type { PluginConfig } from "../lib/plugin-types";
 import type { AnimatePlugin } from "../lib/animate";
@@ -148,23 +148,21 @@ const svgIcon = (path: string, viewBox = "0 0 24 24") =>
   ({
     props: ["size", "class", "height", "width"],
     render() {
-      const size = (this as { size?: number }).size ?? 24;
-      return {
-        type: "svg",
-        props: {
-          xmlns: "http://www.w3.org/2000/svg",
-          width: (this as { width?: number }).width ?? size,
-          height: (this as { height?: number }).height ?? size,
-          viewBox,
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "2",
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          class: (this as { class?: string }).class,
-          innerHTML: path,
-        },
-      };
+      const self = this as { size?: number; width?: number; height?: number; class?: string };
+      const size = self.size ?? 24;
+      return h("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        width: self.width ?? size,
+        height: self.height ?? size,
+        viewBox,
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-width": "2",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        class: self.class,
+        innerHTML: path,
+      });
     },
   }) as unknown as IconComponent;
 

@@ -1,0 +1,39 @@
+/* vue-streamdown Tailwind CSS 엔트리
+ *
+ * 이 파일을 빌드하면 패키지에서 사용하는 모든 Tailwind 클래스가
+ * dist/style.css 로 컴파일됩니다.
+ *
+ * 소비자는 dist/style.css 를 import 하면 됩니다:
+ *   import 'vue-streamdown/style.css'
+ *
+ * shadcn/ui CSS 변수 (--background, --border, --muted 등)는
+ * 소비자 프로젝트에서 정의해야 합니다.
+ */
+
+@import "tailwindcss";
+
+/* shadcn/ui와 일치하는 클래스 기반 dark mode (.dark 클래스) */
+@variant dark (&:where(.dark, .dark *));
+
+/* 소스 스캔 경로 — 패키지 내 모든 Vue/TS 파일 */
+@source "../**/*.vue";
+@source "../**/*.ts";
+
+/* shadcn/ui 색상 변수 매핑
+ * Tailwind v4 의 --color-* 변수를 shadcn CSS 변수로 연결합니다. */
+@theme {
+  --color-background:        var(--background);
+  --color-foreground:        var(--foreground);
+  --color-muted:             var(--muted);
+  --color-muted-foreground:  var(--muted-foreground);
+  --color-border:            var(--border);
+  --color-primary:           var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-sidebar:           var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground, var(--foreground));
+  --color-red-50:            oklch(0.971 0.013 17.38);
+  --color-red-100:           oklch(0.936 0.032 17.717);
+  --color-red-600:           oklch(0.577 0.245 27.325);
+  --color-red-700:           oklch(0.505 0.213 27.518);
+  --color-red-800:           oklch(0.444 0.177 26.127);
+}

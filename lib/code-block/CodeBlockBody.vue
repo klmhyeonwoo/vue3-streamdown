@@ -16,22 +16,6 @@ const props = withDefaults(defineProps<{
 
 const cn = useCn();
 
-const LINE_NUMBER_CLASSES_BASE = baseCn(
-  "block",
-  "before:content-[counter(line)]",
-  "before:inline-block",
-  "before:[counter-increment:line]",
-  "before:w-6",
-  "before:mr-4",
-  "before:text-[13px]",
-  "before:text-right",
-  "before:text-muted-foreground/50",
-  "before:font-mono",
-  "before:select-none"
-);
-
-const lineNumberClasses = computed(() => cn(LINE_NUMBER_CLASSES_BASE));
-
 const parseRootStyle = (rootStyle: string): Record<string, string> => {
   const style: Record<string, string> = {};
   for (const decl of rootStyle.split(";")) {
@@ -91,23 +75,17 @@ const tokenHasBg = (token: HighlightResult["tokens"][number][number]) => {
     :class="cn($props.class, 'overflow-x-auto rounded-md border border-border bg-background p-4 text-sm')"
     :data-language="language"
     data-streamdown="code-block-body"
-  >
-    <pre
-      :class="cn($props.class, 'bg-[var(--sdm-bg,inherit]', 'dark:bg-[var(--shiki-dark-bg,var(--sdm-bg,inherit)]')"
+  ><pre
+      :class="cn($props.class, 'bg-[var(--sdm-bg,inherit)]', 'dark:bg-[var(--shiki-dark-bg,var(--sdm-bg,inherit))]')"
       :style="preStyle"
-    >
-      <code
-        :class="lineNumbers ? cn('[counter-increment:line_0] [counter-reset:line]') : undefined"
+    ><code
+        :class="lineNumbers ? 'sdm-line-numbers' : undefined"
         :style="codeStyle"
-      >
-        <span
+      ><span
           v-for="(row, index) in result.tokens"
           :key="index"
-          :class="lineNumbers ? lineNumberClasses : undefined"
-        >
-          <template v-if="isEmptyRow(row)">{{ "\n" }}</template>
-          <template v-else>
-            <span
+          :class="lineNumbers ? 'sdm-line' : undefined"
+        ><template v-if="isEmptyRow(row)"></template><template v-else><span
               v-for="(token, tokenIndex) in row"
               :key="tokenIndex"
               :class="cn(
@@ -118,10 +96,30 @@ const tokenHasBg = (token: HighlightResult["tokens"][number][number]) => {
               )"
               :style="getTokenStyle(token)"
               v-bind="token.htmlAttrs"
-            >{{ token.content }}</span>
-          </template>
-        </span>
-      </code>
-    </pre>
-  </div>
+            >{{ token.content }}</span></template>
+</span></code></pre></div>
 </template>
+
+<style scoped>
+.sdm-line-numbers {
+  counter-reset: line;
+}
+
+.sdm-line {
+  display: block;
+  counter-increment: line;
+  line-height: 1.5;
+}
+
+.sdm-line::before {
+  content: counter(line);
+  display: inline-block;
+  min-width: 1.5rem;
+  margin-right: 1rem;
+  font-size: 0.8em;
+  text-align: right;
+  opacity: 0.4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  user-select: none;
+}
+</style>

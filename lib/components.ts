@@ -284,7 +284,21 @@ const MarkdownCode = defineComponent({
       }
 
       // Mermaid
-      if (language === "mermaid" && mermaidPlugin.value) {
+      // Handle streaming split: "mermaid" arrives as lang="mer" + first code line "maid\n..."
+      // e.g. ```mer\nmaid\ngraph TD → lang="mer", code="maid\ngraph TD..."
+      const mermaidPrefix = language.length > 0 && language.length < "mermaid".length && "mermaid".startsWith(language)
+        ? "mermaid".slice(language.length)
+        : null;
+      const splitMermaidMatch = mermaidPrefix !== null &&
+        (code === mermaidPrefix || code.startsWith(mermaidPrefix + "\n"));
+      const isMermaidLanguage = language === "mermaid" ||
+        (isBlockIncomplete.value && language.length > 0 && "mermaid".startsWith(language)) ||
+        splitMermaidMatch;
+      // Strip the spurious "maid\n" prefix from code when split occurred
+      const mermaidCode = splitMermaidMatch && mermaidPrefix !== null
+        ? code.startsWith(mermaidPrefix + "\n") ? code.slice(mermaidPrefix.length + 1) : ""
+        : code;
+      if (isMermaidLanguage && mermaidPlugin.value) {
         const cfg = controlsConfig.value;
         const showMermaidControls = shouldShowControls(cfg, "mermaid");
         const showDownload = shouldShowMermaidControl(cfg, "download");
@@ -303,13 +317,13 @@ const MarkdownCode = defineComponent({
             ]),
             showAny ? h("div", { class: cn("pointer-events-none sticky top-2 z-10 -mt-10 flex h-8 items-center justify-end") }, [
               h("div", { class: cn("pointer-events-auto flex shrink-0 items-center gap-2 rounded-md border border-sidebar bg-sidebar/80 px-1.5 py-1 supports-[backdrop-filter]:bg-sidebar/70 supports-[backdrop-filter]:backdrop-blur"), "data-streamdown": "mermaid-block-actions" }, [
-                showDownload ? h(MermaidDownloadDropdown as Component, { chart: code, config: mermaidContext.value?.config }) : null,
-                showCopy ? h(CodeBlockCopyButton as Component, { code }) : null,
-                showFullscreen ? h(MermaidFullscreenButton as Component, { chart: code, config: mermaidContext.value?.config }) : null,
+                showDownload ? h(MermaidDownloadDropdown as Component, { chart: mermaidCode, config: mermaidContext.value?.config }) : null,
+                showCopy ? h(CodeBlockCopyButton as Component, { code: mermaidCode }) : null,
+                showFullscreen ? h(MermaidFullscreenButton as Component, { chart: mermaidCode, config: mermaidContext.value?.config }) : null,
               ]),
             ]) : null,
             h("div", { class: cn("rounded-md border border-border bg-background") }, [
-              h(MermaidAsync as Component, { chart: code, config: mermaidContext.value?.config, showControls: showPanZoom }),
+              h(MermaidAsync as Component, { chart: mermaidCode, config: mermaidContext.value?.config, showControls: showPanZoom }),
             ]),
           ]),
           fallback: () => h(CodeBlockSkeleton as Component),

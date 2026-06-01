@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<{
 });
 
 const cn = useCn();
-const { mermaid: mermaidContext } = useStreamdownContext();
+const { mermaid: mermaidContext, isAnimating } = useStreamdownContext();
 const mermaidPlugin = useMermaidPlugin();
 
 const error = ref<string | null>(null);
@@ -47,7 +47,12 @@ const renderChart = async () => {
     lastValidSvg.value = svg;
   } catch (err) {
     if (!(lastValidSvg.value || svgContent.value)) {
-      error.value = err instanceof Error ? err.message : "Failed to render Mermaid chart";
+      // During streaming, mermaid code is often incomplete (unclosed braces,
+      // partial diagram type names, etc.). Suppress the error UI until the
+      // stream finishes; the loading spinner will show instead.
+      if (!isAnimating.value) {
+        error.value = err instanceof Error ? err.message : "Failed to render Mermaid chart";
+      }
     }
   } finally {
     isLoading.value = false;
@@ -55,6 +60,13 @@ const renderChart = async () => {
 };
 
 watch([() => props.chart, () => props.config, retryCount, shouldRender, mermaidPlugin], renderChart, { immediate: true });
+
+// Re-render when streaming ends so the final complete diagram is always shown.
+// During streaming, failed renders are silently suppressed (isAnimating = true).
+// This watch triggers a fresh render once isAnimating transitions to false.
+watch(isAnimating, (cur, prev) => {
+  if (!cur && prev) renderChart();
+});
 
 const retry = () => { retryCount.value++; };
 const displaySvg = () => svgContent.value || lastValidSvg.value;

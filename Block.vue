@@ -39,15 +39,17 @@ const normalizedContent = computed(() => {
 <template>
   <div v-if="dir" :dir="dir" style="display: contents">
     <Markdown
+      :children="normalizedContent"
       :components="components"
       :rehypePlugins="rehypePlugins"
       :remarkPlugins="remarkPlugins"
-    >{{ normalizedContent }}</Markdown>
+    />
   </div>
   <Markdown
     v-else
+    :children="normalizedContent"
     :components="components"
     :rehypePlugins="rehypePlugins"
     :remarkPlugins="remarkPlugins"
-  >{{ normalizedContent }}</Markdown>
+  />
 </template>

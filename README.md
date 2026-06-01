@@ -33,7 +33,7 @@ Streaming Markdown from LLMs creates unique rendering challenges: incomplete cod
 - 🛡️ **Security-first** — built-in HTML sanitization via `rehype-sanitize` + `rehype-harden`
 - 🎯 **Animated cursor** — blinking block/circle caret during streaming
 - 🔗 **Link safety** — external link confirmation modal
-- 🌙 **Dark mode** — respects shadcn/ui CSS variables
+- 🌙 **Dark mode** — class-based dark mode (`.dark`), compatible with shadcn/ui
 - 💪 **Fully typed** — complete TypeScript support with Composition API
 
 ---
@@ -95,20 +95,17 @@ pnpm add vue3-streamdown
 yarn add vue3-streamdown
 ```
 
-### Tailwind CSS setup
+Styles are **automatically injected** when the library is imported — no additional CSS import or Tailwind setup required.
 
-`vue3-streamdown` uses Tailwind CSS utility classes. Add the following `@source` directive to your global CSS so Tailwind can detect them:
-
-```css
-/* globals.css */
-@source "../node_modules/vue3-streamdown/dist/*.js";
-```
-
-Adjust the relative path based on where your CSS file lives relative to `node_modules`.
+> If you prefer to manage styles manually (e.g. for SSR or CSP reasons), you can import the pre-compiled CSS directly instead:
+>
+> ```ts
+> import "vue3-streamdown/style.css";
+> ```
 
 ### CSS Custom Properties (shadcn/ui design tokens)
 
-Components use shadcn/ui CSS variables. If you already use shadcn/ui these are set automatically. Otherwise, add the following minimal set to your global CSS:
+Components use shadcn/ui CSS variables for theming. If you already use shadcn/ui these are set automatically. Otherwise, add the following minimal set to your global CSS:
 
 ```css
 :root {
@@ -135,6 +132,17 @@ Components use shadcn/ui CSS variables. If you already use shadcn/ui these are s
   --radius: 0.625rem;
 }
 ```
+
+### Dark mode
+
+`vue3-streamdown` uses **class-based dark mode**: dark styles are applied when a `.dark` class is present on any ancestor element (typically `<html>`). This matches shadcn/ui's default behavior.
+
+```ts
+// Toggle dark mode
+document.documentElement.classList.toggle("dark");
+```
+
+> Dark mode does **not** follow the OS `prefers-color-scheme` media query automatically. If you want OS-based toggling, add/remove the `.dark` class based on `window.matchMedia('(prefers-color-scheme: dark)')` yourself.
 
 ---
 
@@ -363,33 +371,33 @@ const plugins = {
 
 ## Props
 
-| Prop                         | Type                              | Default                           | Description                                    |
-| ---------------------------- | --------------------------------- | --------------------------------- | ---------------------------------------------- |
-| `model-value`                | `string`                          | `""`                              | Markdown content to render                     |
-| `mode`                       | `"streaming" \| "static"`         | `"streaming"`                     | Rendering mode                                 |
-| `is-animating`               | `boolean`                         | `false`                           | Whether the stream is active                   |
-| `animated`                   | `boolean \| AnimateOptions`       | —                                 | Enable token-by-token animation                |
-| `caret`                      | `"block" \| "circle"`             | —                                 | Blinking cursor style during streaming         |
-| `controls`                   | `boolean \| ControlsConfig`       | `true`                            | Show code/table/mermaid action buttons         |
-| `line-numbers`               | `boolean`                         | `true`                            | Show line numbers in code blocks               |
-| `shiki-theme`                | `[ThemeInput, ThemeInput]`        | `["github-light", "github-dark"]` | Shiki light/dark themes                        |
-| `plugins`                    | `PluginConfig`                    | —                                 | code / mermaid / math / cjk plugins            |
-| `remark-plugins`             | `Pluggable[]`                     | —                                 | Custom remark plugins                          |
-| `rehype-plugins`             | `Pluggable[]`                     | —                                 | Custom rehype plugins                          |
-| `components`                 | `Components`                      | —                                 | Override hast → Vue component map              |
-| `translations`               | `Partial<StreamdownTranslations>` | —                                 | Override UI strings                            |
-| `icons`                      | `Partial<IconMap>`                | —                                 | Override toolbar icons                         |
-| `prefix`                     | `string`                          | —                                 | Tailwind CSS class prefix                      |
-| `link-safety`                | `LinkSafetyConfig`                | `{ enabled: true }`               | External link confirmation                     |
-| `mermaid`                    | `MermaidOptions`                  | —                                 | Mermaid global config                          |
-| `dir`                        | `"auto" \| "ltr" \| "rtl"`        | —                                 | Text direction (auto = per-block detection)    |
-| `parse-incomplete-markdown`  | `boolean`                         | `true`                            | Use remend for streaming-safe parsing          |
-| `normalize-html-indentation` | `boolean`                         | `false`                           | Prevent indented HTML being treated as code    |
-| `allowed-tags`               | `Record<string, string[]>`        | —                                 | Custom HTML tags to allow through sanitization |
-| `literal-tag-content`        | `string[]`                        | —                                 | Tags whose children are treated as plain text  |
-| `remend`                     | `RemendOptions`                   | —                                 | Options passed to remend                       |
-| `on-animation-start`         | `() => void`                      | —                                 | Called when streaming starts                   |
-| `on-animation-end`           | `() => void`                      | —                                 | Called when streaming ends                     |
+| Prop                         | Type                              | Default                           | Description                                                                                        |
+| ---------------------------- | --------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `model-value`                | `string`                          | `""`                              | Markdown content to render                                                                         |
+| `mode`                       | `"streaming" \| "static"`         | `"streaming"`                     | Rendering mode                                                                                     |
+| `is-animating`               | `boolean`                         | `false`                           | Whether the stream is active                                                                       |
+| `animated`                   | `boolean \| AnimateOptions`       | —                                 | Enable token-by-token animation                                                                    |
+| `caret`                      | `"block" \| "circle"`             | —                                 | Blinking cursor style during streaming                                                             |
+| `controls`                   | `boolean \| ControlsConfig`       | `true`                            | Show code/table/mermaid action buttons                                                             |
+| `line-numbers`               | `boolean`                         | `true`                            | Show line numbers in code blocks                                                                   |
+| `shiki-theme`                | `[ThemeInput, ThemeInput]`        | `["github-light", "github-dark"]` | Shiki `[lightTheme, darkTheme]` — first theme for light mode, second for dark mode (`.dark` class) |
+| `plugins`                    | `PluginConfig`                    | —                                 | code / mermaid / math / cjk plugins                                                                |
+| `remark-plugins`             | `Pluggable[]`                     | —                                 | Custom remark plugins                                                                              |
+| `rehype-plugins`             | `Pluggable[]`                     | —                                 | Custom rehype plugins                                                                              |
+| `components`                 | `Components`                      | —                                 | Override hast → Vue component map                                                                  |
+| `translations`               | `Partial<StreamdownTranslations>` | —                                 | Override UI strings                                                                                |
+| `icons`                      | `Partial<IconMap>`                | —                                 | Override toolbar icons                                                                             |
+| `prefix`                     | `string`                          | —                                 | Tailwind CSS class prefix                                                                          |
+| `link-safety`                | `LinkSafetyConfig`                | `{ enabled: true }`               | External link confirmation                                                                         |
+| `mermaid`                    | `MermaidOptions`                  | —                                 | Mermaid global config                                                                              |
+| `dir`                        | `"auto" \| "ltr" \| "rtl"`        | —                                 | Text direction (auto = per-block detection)                                                        |
+| `parse-incomplete-markdown`  | `boolean`                         | `true`                            | Use remend for streaming-safe parsing                                                              |
+| `normalize-html-indentation` | `boolean`                         | `false`                           | Prevent indented HTML being treated as code                                                        |
+| `allowed-tags`               | `Record<string, string[]>`        | —                                 | Custom HTML tags to allow through sanitization                                                     |
+| `literal-tag-content`        | `string[]`                        | —                                 | Tags whose children are treated as plain text                                                      |
+| `remend`                     | `RemendOptions`                   | —                                 | Options passed to remend                                                                           |
+| `on-animation-start`         | `() => void`                      | —                                 | Called when streaming starts                                                                       |
+| `on-animation-end`           | `() => void`                      | —                                 | Called when streaming ends                                                                         |
 
 ---
 

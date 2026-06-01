@@ -21,6 +21,7 @@ import { preprocessCustomTags } from "./lib/preprocess-custom-tags";
 import { preprocessLiteralTagContent } from "./lib/preprocess-literal-tag-content";
 import { rehypeLiteralTagContent } from "./lib/rehype/literal-tag-content";
 import { remarkCodeMeta } from "./lib/remark/code-meta";
+import { preprocessCjkDelimiters } from "./lib/remark/cjk-friendly";
 import { defaultTranslations, type StreamdownTranslations } from "./lib/translations";
 import { createCn } from "./lib/utils";
 import {
@@ -183,6 +184,8 @@ const processedContent = computed(() => {
     ? remend(input, props.remend)
     : input;
 
+  result = preprocessCjkDelimiters(result);
+
   if (props.literalTagContent && props.literalTagContent.length > 0) {
     result = preprocessLiteralTagContent(result, props.literalTagContent);
   }
@@ -269,12 +272,14 @@ const wrapperClass = computed(() => {
     v-if="mode === 'static'"
     :class="prefixedCn('space-y-4 whitespace-normal [&>*:first-child]:mt-0 [&>*:last-child]:mb-0', $props.class)"
     :dir="dir === 'auto' ? detectTextDirection(processedContent) : dir"
+    data-streamdown="streamdown"
   >
     <Markdown
+      :children="processedContent"
       :components="mergedComponents"
       :rehypePlugins="mergedRehypePlugins"
       :remarkPlugins="mergedRemarkPlugins"
-    >{{ processedContent }}</Markdown>
+    />
   </div>
 
   <!-- STREAMING mode -->
@@ -282,6 +287,7 @@ const wrapperClass = computed(() => {
     v-else
     :class="wrapperClass"
     :style="caretStyle"
+    data-streamdown="streamdown"
   >
     <span v-if="blocks.length === 0 && caret && isAnimating" />
     <Block
